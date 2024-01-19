@@ -73,6 +73,50 @@ div {
   border-right: 0.2rem solid var(--light-primary);
 }
 
+.resizable-element {
+  resize: both;
+}
+
+
+/* Notification */
+
+.notification {
+  width: 30rem;
+  padding: 0.5rem;
+  z-index: 100;
+  position: relative;
+  display: none;
+  text-align: center;
+  background-color: var(--primary);
+}
+
+.notification-title {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  font-weight: bold;
+  background-color: var(--secondary);
+}
+
+.notification-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.notification-button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: var(--primary);
+  color: var(--whithe);
+}
+
+.notification-button:hover {
+  background-color: var(--dark-primary);
+}
+
 /* Paint div */
 
 #paint {
@@ -159,6 +203,12 @@ div {
   justify-content: center;
   width: 100%;
   height: 100%;
+  color: var(--black);
+}
+
+.menu-options_btn:hover {
+  background-color: var(--secondary);
+  color: var(--whithe);
 }
 
 .content {
@@ -167,28 +217,4 @@ div {
   padding: 0.1rem;
   z-index: 10;
   background-color: var(--whithe);
-}
-
-.swal2-popup {
-  background-color: var(--primary);
-  padding: 0;
-}
-
-.swal2-title {
-  padding: 0.8rem;
-  margin: 0.2rem;
-  font-family: "MS Sans Serif", sans-serif;
-  background-color: var(--secondary);
-  color: var(--whithe);
-}
-
-.swal2-actions {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0.5rem;
-  border-top: 0.2rem solid var(--dark-primary);
-  border-left: 0.2rem solid var(--dark-primary);
-  border-bottom: 0.2rem solid var(--light-primary);
-  border-right: 0.2rem solid var(--light-primary);
 }

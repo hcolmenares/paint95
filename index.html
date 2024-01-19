@@ -23,20 +23,17 @@
         <div class="menu">
             <ul class="menu-options flex-div">
                 <li class="menu-options_btn flex-div win-border" onclick="newCanvas()">Nuevo</li>
-                <li class="menu-options_btn flex-div win-border">Abrir</li>
-                <li class="menu-options_btn flex-div win-border">Guardar</li>
-                <li class="menu-options_btn flex-div win-border">Imprimir</li>
-                <li class="menu-options_btn flex-div win-border">Ayuda</li>
-                <li class="menu-options_btn flex-div win-border">Cerrar</li>
+                <li class="menu-options_btn flex-div win-border" onclick="uploadCanvas()">Abrir</li>
+                <li class="menu-options_btn flex-div win-border" onclick="saveCanvas()">Guardar</li>
+                <li class="menu-options_btn flex-div win-border" onclick="printPaint()">Imprimir</li>
+                <li class="menu-options_btn flex-div win-border" onclick="infoPaint()">Ayuda</li>
+                <li class="menu-options_btn flex-div win-border" onclick="closePaint()">Cerrar</li>
             </ul>
         </div>
         <canvas class="content win-border-alter" id="paintCanvas"></canvas>
     </div>
 
     <script src="main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="sweetalert2.all.min.js"></script>
-
 </body>
 
 </html>
