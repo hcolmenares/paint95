@@ -9,10 +9,15 @@ let lineWidthVar = 5;
 let lineCapVar = 'round';
 let strokeStyleVar = '#000';
 let paths = [];
+let canvasHistory = [];
+let forwardHistory = [];
+let forwardPaths = [];
 
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {
+    checkMobile()
+    
     // Make the DIV element draggable:
     dragElement(document.getElementById("paint"));
 
@@ -30,9 +35,31 @@ function init() {
     canvas.addEventListener('mousedown', startPainting);
     canvas.addEventListener('mouseup', stopPainting);
     canvas.addEventListener('mousemove', draw);
+    document.addEventListener('keydown', function (event) {
+        // Verifica si la tecla presionada es 'z' y si la tecla 'Control' o 'Command' está presionada
+        if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey)) {
+            cmdBack();
+        }
+    });
+    document.addEventListener('keydown', function (event) {
+        // Verifica si la tecla presionada es 'y' y si la tecla 'Control' o 'Command' está presionada
+        if ((event.key === 'y' || event.key === 'Y') && (event.ctrlKey || event.metaKey)) {
+            cmdForward();
+        }
+    });
 }
 
-function createNotification(title, message, buttons, input = false, type = 'text') {
+function checkMobile() {
+    // Verificar si el usuario está en un dispositivo móvil
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // Si es un dispositivo móvil, mostrar un mensaje
+        const titulo = 'Advertencia';
+        const texto = 'Algunas funcionalidades podrían verse limitadas en dispositivos móviles. Se recomienda ver el Changelog';
+        showMessage(titulo, texto);
+    }
+}
+
+function createNotification(title, message, buttons, input = false, type = 'text', value = null) {
     return new Promise((resolve) => {
 
         // Create notification container
@@ -54,7 +81,12 @@ function createNotification(title, message, buttons, input = false, type = 'text
         // Create input field if needed
         if (input) {
             inputElement.type = type; // You can modify this based on your requirements
-            // inputElement.value = 'Lienzo';
+            type == 'text' ? inputElement.value = 'Lienzo' : null;
+            if (type == 'number') {
+                inputElement.value = 5;
+                inputElement.setAttribute('min', 1);
+                inputElement.setAttribute('max', 30);
+            }
             inputElement.classList.add('notification-input');
             notificationContainer.appendChild(inputElement);
         }
@@ -132,6 +164,7 @@ function draw(e, isNewPath) {
 
     if (isNewPath) {
         savePath();
+        forwardPaths = [];
     }
 }
 
@@ -145,6 +178,75 @@ function restorePaths() {
     paths.forEach(path => {
         context.putImageData(path, 0, 0);
     });
+}
+
+function cmdBack() {
+    // Verifica si hay rutas almacenadas
+    if (paths.length > 0) {
+        // Elimina la última ruta
+        forwardPaths.push(context.getImageData(0, 0, canvas.width, canvas.height));
+        paths.pop();
+
+        // Limpia el lienzo
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Restaura las rutas restantes
+        restorePaths();
+    }
+    else {
+        return
+    }
+}
+
+function cmdForward() {
+    // Verifica si hay rutas en el historial adelante
+    if (forwardPaths.length > 0) {
+        // Obtiene la última ruta adelante
+        const forwardPath = forwardPaths.pop();
+
+        // Guarda la ruta actual en el historial atrás
+        paths.push(context.getImageData(0, 0, canvas.width, canvas.height));
+
+        // Dibuja la ruta adelante en el lienzo
+        context.putImageData(forwardPath, 0, 0);
+    }
+    else {
+        return
+    }
+}
+
+function penMode() {
+    strokeStyleVar = '#000';
+    context.globalCompositeOperation = "source-over";
+}
+
+function eraserMode() {
+    strokeStyleVar = '#fff';
+    context.globalCompositeOperation = "destination-out";
+}
+
+function changePenSize() {
+    createNotification(
+        'Cambiar tamaño del lapiz',
+        'Ingrese el nuevo tamaño en pixeles del lapiz:',
+        [
+            { text: 'Aceptar', value: true },
+            { text: 'Cancelar', value: false }
+        ],
+        true, // Habilita el campo de entrada
+        'number'
+    )
+        .then((result) => {
+            if (result.buttonValue && result.inputValue) {
+                const newSize = result.inputValue;
+                if (newSize < 1) {
+                    const alertTitle = '¡Hubo un error!';
+                    const alertText = 'No se asignar un valor menor a 1';
+                    showMessage(alertTitle, alertText);
+                }
+                lineWidthVar = newSize;
+            }
+        });
 }
 
 function changeSize() {
@@ -260,7 +362,6 @@ function uploadCanvas() {
                 // Crea una nueva imagen
                 const img = new Image();
                 img.src = imageUrl;
-                console.log(img.width, img.height);
 
                 // Cuando la imagen se carga, dibújala en el canvas
                 img.onload = function () {

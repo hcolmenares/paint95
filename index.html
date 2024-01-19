@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.10.3/dist/sweetalert2.min.css " rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <title>Paint SPA</title>
 </head>
@@ -21,13 +21,38 @@
             </div>
         </div>
         <div class="menu">
+            <!-- Menú -->
             <ul class="menu-options flex-div">
                 <li class="menu-options_btn flex-div win-border" onclick="newCanvas()">Nuevo</li>
                 <li class="menu-options_btn flex-div win-border" onclick="uploadCanvas()">Abrir</li>
                 <li class="menu-options_btn flex-div win-border" onclick="saveCanvas()">Guardar</li>
-                <li class="menu-options_btn flex-div win-border" onclick="printPaint()">Imprimir</li>
                 <li class="menu-options_btn flex-div win-border" onclick="infoPaint()">Ayuda</li>
+                <li class="menu-options_btn flex-div win-border">
+                    <a href="changelog.html" class="menu-link">Changelog</a>
+                </li>
                 <li class="menu-options_btn flex-div win-border" onclick="closePaint()">Cerrar</li>
+            </ul>
+
+            <!-- Acciones -->
+            <ul class="menu-options flex-div">
+                <li class="menu-options_btn flex-div win-border" onclick="cmdBack()">
+                    <i class="bi bi-arrow-90deg-left"></i>
+                </li>
+                <li class="menu-options_btn flex-div win-border" onclick="cmdForward()">
+                    <i class="bi bi-arrow-90deg-right"></i>
+                </li>
+                <li class="menu-options_btn flex-div win-border">
+                    <i class="bi bi-pencil" onclick="penMode()"></i>
+                </li>
+                <li class="menu-options_btn flex-div win-border" onclick="eraserMode()">
+                    <i class="bi bi-eraser"></i>
+                </li>
+                <li class="menu-options_btn flex-div win-border">
+                    <i class="bi bi-droplet"></i>
+                </li>
+                <li class="menu-options_btn flex-div win-border" onclick="changePenSize()">
+                    <i class="bi bi-border-width"></i>
+                </li>
             </ul>
         </div>
         <canvas class="content win-border-alter" id="paintCanvas"></canvas>
