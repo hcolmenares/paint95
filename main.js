@@ -276,42 +276,70 @@ function changeSize() {
 
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     if (document.getElementById(elmnt.id + "-header")) {
-        // if present, the header is where you move the DIV from:
-        document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
+        // If present, the header is where you move the DIV from:
+        if (isMobile) {
+            // For mobile devices, use touch events
+            document.getElementById(elmnt.id + "-header").ontouchstart = dragTouchStart;
+        } else {
+            // For non-mobile devices, use mouse events
+            document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
+        }
     } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
+        // Otherwise, move the DIV from anywhere inside the DIV:
+        if (isMobile) {
+            // For mobile devices, use touch events
+            elmnt.ontouchstart = dragTouchStart;
+        } else {
+            // For non-mobile devices, use mouse events
+            elmnt.onmousedown = dragMouseDown;
+        }
     }
 
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
-        // get the mouse cursor position at startup:
+        // Get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
         document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
+        // Call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
+    }
+
+    function dragTouchStart(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // Get the touch position at startup:
+        var touch = e.touches[0];
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        document.ontouchend = closeDragElement;
+        // Call a function whenever the touch position changes:
+        document.ontouchmove = elementDrag;
     }
 
     function elementDrag(e) {
         e = e || window.event;
         e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
+        // Calculate the new cursor position:
+        pos1 = pos3 - (isMobile ? e.touches[0].clientX : e.clientX);
+        pos2 = pos4 - (isMobile ? e.touches[0].clientY : e.clientY);
+        pos3 = isMobile ? e.touches[0].clientX : e.clientX;
+        pos4 = isMobile ? e.touches[0].clientY : e.clientY;
+        // Set the element's new position:
         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
     }
 
     function closeDragElement() {
-        // stop moving when the mouse button is released:
+        // Stop moving when the mouse button or touch is released:
         document.onmouseup = null;
         document.onmousemove = null;
+        document.ontouchend = null;
+        document.ontouchmove = null;
     }
 }
 
